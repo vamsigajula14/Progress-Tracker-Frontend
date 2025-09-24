@@ -1,3 +1,5 @@
 export function ProjectDetails(){
-    return <div>Project Details Page</div>
+    return <div>
+        ProjectDetails
+    </div>
 }
