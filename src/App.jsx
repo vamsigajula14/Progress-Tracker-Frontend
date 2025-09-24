@@ -9,7 +9,7 @@ import {ProjectDetails} from './pages/ProjectDetails';
 import {SignUp} from './pages/Signup';
 import { Layout } from './components/Layout';
 import {ProtectedRoute} from "./components/ProtectedRoute";
-
+import {NewProject} from './pages/NewProject';
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
             <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
             <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetails /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path = "/project/new" element={<NewProject/>} />
         </Routes>
       </BrowserRouter>
   );

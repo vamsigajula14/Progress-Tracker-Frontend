@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 
 export function Dashboard (){
     const [user,setUser] = useState(null);
-    const [projects,setProjects] = useState([]);
+    const [projects,setProjects] = useState([{}]);
     const token = localStorage.getItem("token");
     const navigator = useNavigate();
     async function fetchData(){
@@ -14,7 +14,6 @@ export function Dashboard (){
                     Authorization : `Bearer ${token}`,
                 }
             })
-            console.log(data.data);
             setUser(data.data);
         }catch(err){
             if(err.response && err.response.status === 403){
@@ -32,7 +31,6 @@ export function Dashboard (){
                     Authorization : `Bearer ${token}`
                 }
             })
-            console.log(response.data);
             setProjects(response.data.projects);
         }catch(err){
             if(err.response && err.response.status === 403){
@@ -79,14 +77,14 @@ export function Dashboard (){
         <hr/>
         <div>
     
-            {projects.length > 0? 
+            {projects.length > 0 ? 
                 <div>
                     <ul>
                         {
                             projects.map((project)=>{
-                                <li key={project._id}>
-                                    {project.title} {project.status}
-                                </li>
+                               return  (<li key={project._id}>
+                                   Name   : {project.name} , Status : {project.status}
+                                </li>)
                             })
                         }
 
@@ -101,7 +99,7 @@ export function Dashboard (){
         <hr/>
         <div style={{display:'flex',gap:"1rem"}}>
             <button onClick={()=>{
-                navigator("/newproject")
+                navigator("/project/new")
             }}>➕ New Project</button>
             <button onClick={()=>{
                 navigator("/projects")
