@@ -8,6 +8,7 @@ import {Projects} from './pages/Projects';
 import {ProjectDetails} from './pages/ProjectDetails';
 import {SignUp} from './pages/Signup';
 import { Layout } from './components/Layout';
+import {ProtectedRoute} from "./components/ProtectedRoute";
 
 
 function App() {
@@ -18,9 +19,9 @@ function App() {
             <Route path="/" element={<Layout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<ProjectDetails />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+            <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetails /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
   );
