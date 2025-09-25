@@ -58,6 +58,9 @@ export function Projects(){
             }
         }
     }
+    async function editProject(id){
+        navigator(`/project/edit/${id}`);
+    }
     useEffect(()=>{
         fetchData();
     },[])
@@ -75,9 +78,14 @@ export function Projects(){
                             <h4>Project Name : {project.name}</h4>
                             <h4>Description: {project.description}</h4>
                             <h4>Status: {project.status}</h4>
-                            <button onClick={()=>{
-                                deleteProject(project._id);
-                            }}>Delete</button>
+                            <div style={{display:"flex",justifyContent:"space-between"}}>
+                                <button onClick={()=>{
+                                    editProject(project._id);
+                                }}>Edit</button>
+                                <button onClick={()=>{
+                                    deleteProject(project._id);
+                                }}>Delete</button>
+                            </div>
                             <hr/>
                         </li>
                     })
