@@ -40,7 +40,6 @@ export function EditProject(){
                     Authorization : `Bearer ${token}`,
                 }
             })
-            console.log(response);
             const data = response.data;
             setName(data.project.name||"");
             setDescription(data.project.description||"");

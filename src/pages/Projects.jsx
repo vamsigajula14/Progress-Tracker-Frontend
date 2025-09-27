@@ -58,8 +58,11 @@ export function Projects(){
             }
         }
     }
-    async function editProject(id){
+    function editProject(id){
         navigator(`/project/edit/${id}`);
+    }
+    function goTo(id){
+        navigator(`/projects/${id}`);
     }
     useEffect(()=>{
         fetchData();
@@ -74,7 +77,9 @@ export function Projects(){
             {projects.length > 0 ? 
                 (<ul>
                     {projects.map((project)=>{
-                        return <li key={project._id}>
+                        return <li key={project._id} onClick={()=>{
+                            goTo(project._id);
+                        } } style={{cursor : "pointer"}}>
                             <h4>Project Name : {project.name}</h4>
                             <h4>Description: {project.description}</h4>
                             <h4>Status: {project.status}</h4>
@@ -93,7 +98,6 @@ export function Projects(){
                 </ul>) : (
                     <h2>No Projects</h2>
                 )
-
             }
         </div>
     </div>
