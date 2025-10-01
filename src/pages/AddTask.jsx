@@ -8,9 +8,11 @@ export function AddTask(){
     const {id} = useParams();
     const navigator = useNavigate();
     const token = localStorage.getItem("token");
+    const [loading,setLoading] = useState(false);
     async function createTask(event){
         try{
             event.preventDefault();
+            setLoading(true);
             if(name.trim().length === 0 || description.trim().length === 0){
                 alert("Fields may be empty");
                 return;
@@ -51,7 +53,7 @@ export function AddTask(){
                 <label htmlFor="description">Description:</label>
                 <input type="text" value={description} onChange={e=>setDescription(e.target.value)} />
             </div>
-            <button type="submit">Create Task</button>
+           {(loading) ? <h2>Creating</h2> : <button type="submit">Create Task</button>}
         </form>
     </div>
 }

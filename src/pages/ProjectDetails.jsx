@@ -146,6 +146,7 @@ export function ProjectDetails() {
                 <button onClick={() => alert("Add Subtask to " + task._id)}>
                   + Add Subtask
                 </button>
+                <hr/>
               </li>
             ))}
           </ul>
