@@ -11,6 +11,7 @@ import { Layout } from './components/Layout';
 import {ProtectedRoute} from "./components/ProtectedRoute";
 import {NewProject} from './pages/NewProject';
 import { EditProject } from './pages/EditProject';
+import {AddTask} from "./pages/AddTask";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path = "/project/new" element={<NewProject/>} />
             <Route path = "/project/edit/:id" element={<EditProject />} />
+            <Route path='/task/new/:id' element={<ProtectedRoute><AddTask/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
   );

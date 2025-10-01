@@ -8,57 +8,87 @@ export function ProjectDetails() {
   const token = localStorage.getItem("token");
 
   // state
-  const [tasks, setTasks] = useState(null);
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  async function deleteTask(taskId){
-      try{
-        const response = await axios.delete(`https://progress-tracker-backend-hyf8.onrender.com/api/tasks/${taskId}`,{
-            headers : {
-                Authorization : `Bearer ${token}`
-            }
-        })
-        if(response.data.response.success){
-            setTasks(tasks.filter((task)=> {
-                return task._id !== taskId}
-            ))
-        }
-    }catch(err){
-        const value = getErrorDetails(err);
-        if(getErrorDetails){
-            alert("got an error while deleting task",err.message);
-        }
-    }
-}
-function getErrorDetails(err){
-      if(err.response && err.response.status === 403){
-          alert("Session time out");
-          localStorage.removeItem("token");
-          navigator("/login");
-      }else{
-        return true;
-      }
+  const [project, setProject] = useState({});
 
+  async function deleteTask(taskId) {
+    try {
+      const response = await axios.delete(
+        `https://progress-tracker-backend-hyf8.onrender.com/api/tasks/${taskId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        setTasks(tasks.filter((task) => task._id !== taskId));
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 403) { 
+        alert("Session time out");
+        localStorage.removeItem("token");
+        navigate("/login"); 
+      } else {
+        alert("Got an error while deleting task: " + err.message);
+      }
+    }
   }
 
-  // fetch project details on mount (dummy for now)
-  useEffect(async () => {
-    // later: axios.get(`/projects/${id}`)
-    try{
-        const response = await axios.get(`https://progress-tracker-backend-hyf8.onrender.com/api/tasks/project/${id}`,{
-            headers : {
-                Authorization : `Bearer ${token}`
-            }
-        })
-        setTimeout(() => {
-          setTasks(response.data.tasks);
-          setLoading(false);
-        }, 500);
-    }catch(err){
-        if(getErrorDetails(err)){
-            alert("got an error while fetching data");
+  async function fetchProject() {
+    try {
+      const projectDetails = await axios.get(
+        `https://progress-tracker-backend-hyf8.onrender.com/api/projects/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      setProject(projectDetails.data.project || {});
+      setLoading(false);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        alert("Session time out");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else if (err.response && err.response.status === 404) {
+        setProject({});
+      } else {
+        alert("Got an error while fetching");
+      }
     }
+  }
+
+  async function fetchTask() {
+    try {
+      const response = await axios.get(
+        `https://progress-tracker-backend-hyf8.onrender.com/api/tasks/project/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setTasks(response.data.tasks || []);
+      setLoading(false);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        alert("Session time out");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else if (err.response && err.response.status === 404) {
+        setTasks([]);
+      } else {
+        alert("Got an error while fetching");
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchProject();
+    fetchTask();
   }, [id]);
 
   if (loading) return <h3>Loading project...</h3>;
@@ -67,15 +97,14 @@ function getErrorDetails(err){
     <div>
       {/* Project Header */}
       <div>
+        <h2>Project Details</h2>
         <h2>{project.name}</h2>
         <p>{project.description}</p>
         <p>Overall Progress: {project.progress}%</p>
       </div>
-      <div style={{display : "flex",justifyContent : "space-between"}}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <button onClick={() => navigate("/projects")}>Back to Projects</button>
-        <button onClick={() => {
-
-        }}>+ Add Task</button>
+        <button onClick={() => navigate(`/task/new/${id}`)}>+ Add Task</button>
       </div>
       <hr />
 
@@ -91,11 +120,7 @@ function getErrorDetails(err){
                 <button onClick={() => alert("Edit Task " + task._id)}>
                   Edit
                 </button>
-                <button onClick={() => {
-                    deleteTask(taskId);
-                }}>
-                  Delete
-                </button>
+                <button onClick={() => deleteTask(task._id)}>Delete</button>
 
                 {/* Subtasks */}
                 <ul>
@@ -105,18 +130,14 @@ function getErrorDetails(err){
                         <input
                           type="checkbox"
                           checked={sub.completed}
-                          onChange={() =>
-                            alert("Toggle subtask " + sub._id)
-                          }
+                          onChange={() => alert("Toggle subtask " + sub._id)}
                         />
                         {sub.name}
                       </label>
                       <button onClick={() => alert("Edit Subtask " + sub._id)}>
                         Edit
                       </button>
-                      <button
-                        onClick={() => alert("Delete Subtask " + sub._id)}
-                      >
+                      <button onClick={() => alert("Delete Subtask " + sub._id)}>
                         Delete
                       </button>
                     </li>
