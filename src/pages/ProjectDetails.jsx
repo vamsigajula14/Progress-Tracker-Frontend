@@ -117,7 +117,7 @@ export function ProjectDetails() {
                 <h4>
                   {task.name} - Progress: {task.progress}%
                 </h4>
-                <button onClick={() => alert("Edit Task " + task._id)}>
+                <button onClick={() => navigate(`/task/edit/${task._id}`)}>
                   Edit
                 </button>
                 <button onClick={() => deleteTask(task._id)}>Delete</button>
