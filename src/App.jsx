@@ -13,6 +13,7 @@ import {NewProject} from './pages/NewProject';
 import { EditProject } from './pages/EditProject';
 import {AddTask} from "./pages/AddTask";
 import {EditTask} from "./pages/EditTask";
+import { AddSubTask } from './pages/AddSubTask';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path = "/project/edit/:id" element={<EditProject />} />
             <Route path='/task/new/:id' element={<ProtectedRoute><AddTask/></ProtectedRoute>}/>
             <Route path='/task/edit/:id' element={<ProtectedRoute><EditTask/></ProtectedRoute>} />
+            <Route path='/subtask/new/:id' element = {<ProtectedRoute><AddSubTask/></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
   );

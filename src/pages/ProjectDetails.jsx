@@ -143,7 +143,7 @@ export function ProjectDetails() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => alert("Add Subtask to " + task._id)}>
+                <button onClick={() => navigate(`/subtask/new/${task._id}`)}>
                   + Add Subtask
                 </button>
                 <hr/>
