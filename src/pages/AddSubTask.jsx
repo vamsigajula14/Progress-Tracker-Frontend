@@ -55,7 +55,7 @@ export function AddSubTask(){
                 <label >Subtask Description:</label>
                 <input type="text" value={description} onChange={e=>setDescription(e.target.value)} />
             </div>
-            { loading ?<h2>Sub task creating</h2> :(<button type = "submit">Create Subtask</button>)}
+            { loading ? <h2>Sub task creating</h2> :(<button type = "submit">Create Subtask</button>)}
         </form>
     </div>
 }

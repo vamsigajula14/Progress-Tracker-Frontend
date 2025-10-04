@@ -71,7 +71,37 @@ export function ProjectDetails() {
           },
         }
       );
-      setTasks(response.data.tasks || []);
+      const tasks = response.data.tasks;
+      console.log(tasks);
+      if(tasks){
+        for(let i = 0; i < tasks.length;i++){
+            tasks[i]['listofsubtasks'] = []
+            for(let j = 0; j < tasks[i].subtasks.length;j++){
+              if(tasks[i].subtasks[j]){
+                try{
+                  const response = await axios.get(`https://progress-tracker-backend-hyf8.onrender.com/api/subtasks/${tasks[i].subtasks[j]}`,{
+                    headers : {
+                      Authorization : `Bearer ${token}`
+                    }
+                  })
+                  if(response.data.success === true){
+                    tasks[i]['listofsubtasks'].push(response.data.subtask)
+                  }
+                }catch(err){
+                  if(err.response && err.response.status === 403){
+                    alert("Session timeout");
+                    localStorage.removeItem("token");
+                    navigator("/login");
+                  }else{
+                    alert(err.message);
+                    return;
+                    }
+                }
+              }
+            }
+          }
+      }
+      setTasks(tasks || [])
       setLoading(false);
     } catch (err) {
       if (err.response && err.response.status === 403) {
@@ -82,10 +112,33 @@ export function ProjectDetails() {
         setTasks([]);
       } else {
         alert("Got an error while fetching");
+        console.log(err);
       }
     }
   }
+  async function deleteSubTask(subTaskId){
+    try{
+      const response = await axios.delete(`https://progress-tracker-backend-hyf8.onrender.com/api/subtasks/${subTaskId}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      })
+      setTasks(tasks.map(task => ({
+        ...task,
+        listofsubtasks: task.listofsubtasks.filter(sub => sub._id !== subTaskId)
+      })));
 
+
+    }catch(err){
+      if(err.response && err.response.status === 403){
+        alert("Session timeout");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }else{
+        alert(err.message);
+      }
+    }
+  }
   useEffect(() => {
     fetchProject();
     fetchTask();
@@ -124,12 +177,12 @@ export function ProjectDetails() {
 
                 {/* Subtasks */}
                 <ul>
-                  {task.subtasks.map((sub) => (
+                  {task.listofsubtasks.map((sub) => (
                     <li key={sub._id}>
                       <label>
                         <input
                           type="checkbox"
-                          checked={sub.completed}
+                          checked={sub.status}
                           onChange={() => alert("Toggle subtask " + sub._id)}
                         />
                         {sub.name}
@@ -137,7 +190,7 @@ export function ProjectDetails() {
                       <button onClick={() => alert("Edit Subtask " + sub._id)}>
                         Edit
                       </button>
-                      <button onClick={() => alert("Delete Subtask " + sub._id)}>
+                      <button onClick={() => deleteSubTask(sub._id)}>
                         Delete
                       </button>
                     </li>
