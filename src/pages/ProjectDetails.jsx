@@ -187,7 +187,7 @@ export function ProjectDetails() {
                         />
                         {sub.name}
                       </label>
-                      <button onClick={() => alert("Edit Subtask " + sub._id)}>
+                      <button onClick={() => navigate(`/subtask/edit/${sub._id}`)}>
                         Edit
                       </button>
                       <button onClick={() => deleteSubTask(sub._id)}>

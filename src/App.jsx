@@ -14,12 +14,12 @@ import { EditProject } from './pages/EditProject';
 import {AddTask} from "./pages/AddTask";
 import {EditTask} from "./pages/EditTask";
 import { AddSubTask } from './pages/AddSubTask';
+import {EditSubTask} from "./pages/EditSubTask";
 
 function App() {
   return (
       <BrowserRouter>
-        <Routes>
-            
+        <Routes>      
             <Route path="/" element={<Layout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
@@ -31,6 +31,7 @@ function App() {
             <Route path='/task/new/:id' element={<ProtectedRoute><AddTask/></ProtectedRoute>}/>
             <Route path='/task/edit/:id' element={<ProtectedRoute><EditTask/></ProtectedRoute>} />
             <Route path='/subtask/new/:id' element = {<ProtectedRoute><AddSubTask/></ProtectedRoute>} />
+            <Route path='/subtask/edit/:id' element = {<ProtectedRoute><EditSubTask/></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
   );
