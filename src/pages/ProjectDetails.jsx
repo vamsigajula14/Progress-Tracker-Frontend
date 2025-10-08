@@ -139,6 +139,48 @@ export function ProjectDetails() {
       }
     }
   }
+  async function toggleSubtaskStatus(subtaskId, currentStatus, taskId) {
+  try {
+    // Calculate the new status value
+    const newStatus = currentStatus === "completed" ? "pending" : "completed";
+
+    const response = await axios.patch(
+      `https://progress-tracker-backend-hyf8.onrender.com/api/subtasks/${subtaskId}/status`,
+      { status: newStatus },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (response.data.success) {
+      // Update UI immediately to reflect the change
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task._id === taskId
+            ? {
+                ...task,
+                listofsubtasks: task.listofsubtasks.map((sub) =>
+                  sub._id === subtaskId ? { ...sub, status: newStatus } : sub
+                ),
+              }
+            : task
+        )
+      );
+    } else {
+      alert("Failed to update subtask status");
+    }
+  } catch (err) {
+    if (err.response && err.response.status === 403) {
+      alert("Session timeout");
+      localStorage.removeItem("token");
+      navigate("/login");
+    } else {
+      alert("Error updating subtask status: " + err.message);
+    }
+  }
+}
+
+
   useEffect(() => {
     fetchProject();
     fetchTask();
@@ -182,8 +224,8 @@ export function ProjectDetails() {
                       <label>
                         <input
                           type="checkbox"
-                          checked={sub.status}
-                          onChange={() => alert("Toggle subtask " + sub._id)}
+                          checked={sub.status === "completed"}
+                          onChange={() => toggleSubtaskStatus(sub._id, sub.status, task._id)}
                         />
                         {sub.name}
                       </label>
